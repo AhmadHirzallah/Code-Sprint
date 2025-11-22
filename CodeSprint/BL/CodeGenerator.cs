@@ -6,7 +6,8 @@ namespace BL
 {
     public class CodeGenerator
     {
-        public async Task GenerateOneQ(string pdfFilePath = @"E:\Dash Board\Resources\WORK & Practice\Code-Sprint\English101.pdf")
+        public async Task GenerateFromOneFile(string pdfFilePath = @"E:\Dash Board\Resources\WORK & Practice\Code-Sprint\English101.pdf",
+                                        string additionalInformation = "")
         {
             string base64data = "";
             var googleAI = new GoogleAI(apiKey: "AIzaSyBCM3o9aMqzE1bCPSKwi-JmhKHlYNffeLs");
@@ -15,7 +16,7 @@ namespace BL
             var model = googleAI.GenerativeModel(model: Model.Gemma3);
 
 
-            string prompt = """
+            string basePrompt = """
                                     You are an AI assistant that helps build the business logic and API layer for an AI-powered Test Bank Generator system. This system processes educational PDFs and extracts multiple-choice questions.
 
                                     🧩 Your Task:
@@ -71,12 +72,20 @@ namespace BL
                                     ]
                                 """;
 
+            string AddFromUserPrompt = basePrompt;
+
+            // Append additional instructions **only when the user sends something**
+            if (!string.IsNullOrWhiteSpace(additionalInformation))
+            {
+                basePrompt += $"\n\nAdditional User Requirements:\n{additionalInformation}";
+            }
+
             if (File.Exists(pdfFilePath))
             {
                 base64data = Convert.ToBase64String(File.ReadAllBytes(pdfFilePath));
             }
 
-            var request = new GenerateContentRequest(prompt);
+            var request = new GenerateContentRequest(basePrompt);
             request.AddPart(new InlineData() { Data = base64data, MimeType = "application/pdf" });
 
 
