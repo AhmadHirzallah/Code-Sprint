@@ -1,4 +1,4 @@
-﻿namespace DAL
+﻿namespace ConsolApp
 {
     public class CodeGenerator
     {

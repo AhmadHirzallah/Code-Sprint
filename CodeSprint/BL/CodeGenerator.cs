@@ -2,12 +2,14 @@
 using System.Diagnostics;
 using Mscc.GenerativeAI;
 
-namespace DAL
+namespace BL
 {
     public class CodeGenerator
     {
         public async Task GenerateCode()
         {
+            string pdfFilePath = @"E:\Dash Board\Resources\WORK & Practice\Code-Sprint\English101.pdf";
+            string base64data = "";
             var googleAI = new GoogleAI(apiKey: "AIzaSyBCM3o9aMqzE1bCPSKwi-JmhKHlYNffeLs");
 
 
@@ -16,19 +18,70 @@ namespace DAL
 
 
 
+
+
             string prompt = """
-                
+                You are an AI assistant that helps build the business logic and API layer for an AI-powered Test Bank Generator system. This system processes educational PDFs and extracts multiple-choice questions.
+
+                🧩 Your Task:
+
+                Develop a C# backend service that performs the following:
+
+                Accepts a PDF file via an HTTP POST endpoint.
+
+                Validates the file:
+
+                Must be a .pdf
+
+                File size must not exceed a defined limit (e.g., 5MB)
+
+                Processes the PDF content to:
+
+                Detect and extract multiple-choice questions.
+
+                Extract the question text and associated answer choices.
+
+                Identify the correct answer number if present.
+
+                Returns the result as JSON, formatted exactly like this:
+                Your output must be ONLY JSON !!! Without any additional text or explanation
+                outside the JSON.
+
+                [
+                  {
+                    "text": "What is the capital of France?",
+                    "choices": {
+                      "choice1": "Berlin",
+                      "choice2": "Madrid",
+                      "choice3": "Paris",
+                      "choice4": "Rome"
+                    },
+                    "answerNumber": 3
+                  },
+                  {
+                    "text": "Which planet is known as the Red Planet?",
+                    "choices": {
+                      "choice1": "Earth",
+                      "choice2": "Mars",
+                      "choice3": "Venus",
+                      "choice4": "Jupiter"
+                    },
+                    "answerNumber": 2
+                  }
+                ]
             """;
 
-
+            if (File.Exists(pdfFilePath))
+            {
+                base64data = Convert.ToBase64String(File.ReadAllBytes(pdfFilePath));
+            }
 
             var request = new GenerateContentRequest(prompt);
+            request.AddPart(new InlineData() { Data = base64data, MimeType = "application/pdf" });
 
 
             var stopwatch = Stopwatch.StartNew();
-            await request.AddMedia("https://amromainstorage1.blob.core.windows.net/taskalayze/CV%20-%20Omar%20Waleed.pdf2c9567f3-c349-41be-ac83-924381294f47",
-                mimeType: "application/pdf");
-
+           
 
             var response = await model.GenerateContent(request);
 
@@ -37,6 +90,6 @@ namespace DAL
 
             Console.WriteLine(stopwatch.ElapsedMilliseconds);
         }
-
     }
 }
+

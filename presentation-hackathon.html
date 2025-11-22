@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Test Bank Generator - Hackathon Presentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 60px 80px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #0d1117 0%, #1c2128 100%);
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 14px;
+            color: #8b949e;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .gradient-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00d9ff, #7f5af0);
+        }
+
+        h1 {
+            font-size: 72px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #7f5af0, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+
+        h3 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #00ff88;
+        }
+
+        h4 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #00d9ff;
+        }
+
+        p, li {
+            font-size: 22px;
+            line-height: 1.6;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 12px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #7f5af0;
+            font-weight: bold;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #58a6ff;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 28px;
+            color: #8b949e;
+        }
+
+        .date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            color: #00d9ff;
+            margin-top: 20px;
+        }
+
+        .box {
+            background: linear-gradient(135deg, #161b22, #1c2128);
+            border: 2px solid #30363d;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #161b22, #1c2128);
+            border: 2px solid #30363d;
+            border-left: 4px solid #7f5af0;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 56px;
+            font-weight: 800;
+            color: #00ff88;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #8b949e;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .highlight {
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        .info {
+            color: #00d9ff;
+            font-weight: 600;
+        }
+
+        .warning {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .btn {
+            background: #7f5af0;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #9d72ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(127, 90, 240, 0.4);
+        }
+
+        .flow-step {
+            background: linear-gradient(135deg, #161b22, #1c2128);
+            border: 2px solid #30363d;
+            border-left: 4px solid #7f5af0;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .cta {
+            background: linear-gradient(135deg, #7f5af0, #00ff88);
+            color: #0d1117;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(127, 90, 240, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active" data-slide="1">
+            <div class="gradient-border"></div>
+            <div class="logo">&lt;hackathon-2025&gt;</div>
+            <h1 style="font-size: 84px;">AI Test Bank<br/>Generator</h1>
+            <p class="subtitle" style="font-size: 36px;">From Static PDFs to Smart Exams in <span class="highlight">60 Seconds</span></p>
+            <div style="margin: 40px 0;">
+                <p class="date" style="font-size: 28px;">🏆 AI Hackathon 2025 | Built in 4 Hours</p>
+            </div>
+          
+            <div class="slide-number">1 / 7</div>
+        </div>
+
+        <!-- Slide 2: The Problem -->
+        <div class="slide" data-slide="2">
+            <div class="gradient-border"></div>
+            <h2 style="color: #00ff88;">🎯 The Real-World Problem</h2>
+            <h3 style="font-size: 38px;">Universities Face a Critical Challenge</h3>
+            
+            <div class="box" style="border-left: 6px solid #ff6b6b;">
+                <h4 style="color: #ff6b6b; font-size: 28px; margin-bottom: 20px;">😓 Current Situation:</h4>
+                <ul style="font-size: 22px;">
+                    <li>Professors manually create exams from test banks (PDFs/images)</li>
+                    <li>Copy-pasting questions takes <span class="warning">2-3 hours per exam</span></li>
+                    <li>Grading 100+ students takes another <span class="warning">5-10 hours</span></li>
+                    <li>Multiple exams per semester = <span class="warning">200+ hours wasted</span></li>
+                    <li>Students want instant practice and feedback</li>
+                </ul>
+            </div>
+
+            <div class="box" style="border-left: 6px solid #00ff88;">
+                <h4 style="color: #00ff88; font-size: 28px; margin-bottom: 20px;">� The Vision:</h4>
+                <p style="font-size: 24px; line-height: 1.8;">
+                    Imagine uploading a test bank document and within <span class="highlight">60 seconds</span>, students have a fully interactive, 
+                    self-grading exam. No manual work. No delays. Just <span class="info">smart automation powered by AI</span>.
+                </p>
+            </div>
+
+            <div style="text-align: center; background: rgba(0,255,136,0.2); padding: 25px; border-radius: 12px; border: 2px solid #00ff88; margin-top: 30px;">
+                <p style="font-size: 32px;"><span class="highlight">Your Mission:</span> Build the solution that revolutionizes education 🚀</p>
+            </div>
+            
+            <div class="slide-number">2 / 7</div>
+        </div>
+
+        <!-- Slide 3: How It Should Work -->
+        <div class="slide" data-slide="3">
+            <div class="gradient-border"></div>
+            <h2 style="color: #00d9ff;">🔄 The Complete User Journey</h2>
+            <h3 style="font-size: 32px; color: #8b949e;">From Upload to Results in Under 60 Seconds</h3>
+            
+            <div class="flow-step">
+                <h4 style="color: #00ff88; font-size: 26px; margin-bottom: 10px;">Step 1️⃣: Upload Test Bank</h4>
+                <p style="font-size: 20px; color: #c9d1d9;">
+                    User uploads a PDF or image containing test bank questions. The system should accept multiple formats 
+                    and provide instant feedback if the file is invalid.
+                </p>
+            </div>
+
+            <div class="flow-step">
+                <h4 style="color: #00d9ff; font-size: 26px; margin-bottom: 10px;">Step 2️⃣: AI Extracts Questions</h4>
+                <p style="font-size: 20px; color: #c9d1d9;">
+                    Behind the scenes, AI analyzes the document, identifies questions and answers, and structures them 
+                    into a format ready for an interactive exam. This magic happens automatically!
+                </p>
+            </div>
+
+            <div class="flow-step">
+                <h4 style="color: #7f5af0; font-size: 26px; margin-bottom: 10px;">Step 3️⃣: Take Interactive Exam</h4>
+                <p style="font-size: 20px; color: #c9d1d9;">
+                    Students see a clean interface with questions they can answer. Track progress, navigate between questions, 
+                    and submit when ready.
+                </p>
+            </div>
+
+            <div class="flow-step">
+                <h4 style="color: #ffa500; font-size: 26px; margin-bottom: 10px;">Step 4️⃣: Instant Results & Review</h4>
+                <p style="font-size: 20px; color: #c9d1d9;">
+                    Immediately see the score, which questions were correct/incorrect, and review all answers. 
+                    Learning happens in real-time!
+                </p>
+            </div>
+
+            <div class="slide-number">3 / 7</div>
+        </div>
+
+        <!-- Slide 4: Core Features to Build -->
+        <div class="slide" data-slide="4">
+            <div class="gradient-border"></div>
+            <h2 style="color: #00ff88;">�️ What You Need to Build</h2>
+            <h3 style="font-size: 32px; color: #8b949e;">Essential Features of Your Solution</h3>
+            
+            <div class="box" style="border-left: 6px solid #00ff88;">
+                <h4 style="color: #00ff88; font-size: 28px; margin-bottom: 15px;">📤 File Upload System</h4>
+                <p style="font-size: 20px; color: #c9d1d9; margin-bottom: 10px;">
+                    Create a user-friendly way to upload test bank documents (PDF, PNG, JPG). Think about:
+                </p>
+                <ul style="font-size: 19px;">
+                    <li>Drag & drop or click to upload</li>
+                    <li>File validation (size, type)</li>
+                    <li>Visual feedback during upload</li>
+                    <li>Preview of uploaded file</li>
+                </ul>
+            </div>
+
+            <div class="box" style="border-left: 6px solid #00d9ff;">
+                <h4 style="color: #00d9ff; font-size: 28px; margin-bottom: 15px;">🤖 AI-Powered Extraction</h4>
+                <p style="font-size: 20px; color: #c9d1d9; margin-bottom: 10px;">
+                    Integrate an AI model to read and understand the document. Your AI should:
+                </p>
+                <ul style="font-size: 19px;">
+                    <li>Extract questions from various formats</li>
+                    <li>Identify answer choices (A, B, C, D)</li>
+                    <li>Determine the correct answer</li>
+                    <li>Handle different question styles</li>
+                </ul>
+            </div>
+
+            <div class="slide-number">4 / 7</div>
+        </div>
+
+        <!-- Slide 5: Interactive Exam & Results -->
+        <div class="slide" data-slide="5">
+            <div class="gradient-border"></div>
+            <h2 style="color: #7f5af0;">📝 Interactive Experience</h2>
+            <h3 style="font-size: 32px; color: #8b949e;">Making Exams Engaging & Informative</h3>
+            
+            <div class="box" style="border-left: 6px solid #7f5af0;">
+                <h4 style="color: #7f5af0; font-size: 28px; margin-bottom: 15px;">📝 Exam Interface</h4>
+                <p style="font-size: 20px; color: #c9d1d9; margin-bottom: 10px;">
+                    Design an interface where students can actually take the exam:
+                </p>
+                <ul style="font-size: 19px;">
+                    <li>Display one question at a time (or all at once)</li>
+                    <li>Clear answer selection with multiple choice buttons</li>
+                    <li>Progress indicator (e.g., "Question 5 of 20")</li>
+                    <li>Navigation between questions</li>
+                    <li>Submit button when complete</li>
+                </ul>
+            </div>
+
+            <div class="box" style="border-left: 6px solid #00ff88;">
+                <h4 style="color: #00ff88; font-size: 28px; margin-bottom: 15px;">✅ Auto-Grading & Results</h4>
+                <p style="font-size: 20px; color: #c9d1d9; margin-bottom: 10px;">
+                    Instantly grade and show results:
+                </p>
+                <ul style="font-size: 19px;">
+                    <li>Calculate score automatically</li>
+                    <li>Show percentage and grade</li>
+                    <li>Display which answers were correct/incorrect</li>
+                    <li>Allow review of all questions with correct answers</li>
+                </ul>
+            </div>
+
+            <div class="slide-number">5 / 7</div>
+        </div>
+
+        <!-- Slide 6: Design & User Experience -->
+        <div class="slide" data-slide="6">
+            <div class="gradient-border"></div>
+            <h2 style="color: #00d9ff;">🎨 Design Matters!</h2>
+            <h3 style="font-size: 32px; color: #8b949e;">Create an Experience Students Will Love</h3>
+            
+            <div class="box" style="border-left: 6px solid #00d9ff;">
+                <h4 style="color: #00d9ff; font-size: 28px; margin-bottom: 15px;">💡 Make It Beautiful</h4>
+                <ul style="font-size: 20px;">
+                    <li>Choose a cohesive color scheme and stick to it</li>
+                    <li>Use consistent fonts and spacing</li>
+                    <li>Make buttons and clickable elements obvious</li>
+                    <li>Add your personal creative touch!</li>
+                    <li>Consider dark mode or unique themes</li>
+                </ul>
+            </div>
+
+            <div class="box" style="border-left: 6px solid #7f5af0;">
+                <h4 style="color: #7f5af0; font-size: 28px; margin-bottom: 15px;">⚡ Make It Fast & Smooth</h4>
+                <ul style="font-size: 20px;">
+                    <li>Show loading indicators during AI processing</li>
+                    <li>Provide clear error messages if something fails</li>
+                    <li>Make the interface responsive (works on mobile)</li>
+                    <li>Add smooth transitions and animations</li>
+                </ul>
+            </div>
+
+            <div class="box" style="border-left: 6px solid #ffa500;">
+                <h4 style="color: #ffa500; font-size: 28px; margin-bottom: 15px;">🚀 Go Beyond!</h4>
+                <p style="font-size: 20px; color: #c9d1d9;">
+                    Think of extra features: Timer? Study mode? Export results? Multiple file uploads? 
+                    <span class="highlight">Creativity wins!</span>
+                </p>
+            </div>
+
+            <div class="slide-number">6 / 7</div>
+        </div>
+
+        <!-- Slide 7: Your Challenge Awaits -->
+        <div class="slide" data-slide="7">
+            <div class="gradient-border"></div>
+            <h2 style="font-size: 56px;">🚀 Your Challenge Awaits!</h2>
+            
+            <div style="background: linear-gradient(135deg, #161b22, #1c2128); border: 3px solid #7f5af0; border-radius: 20px; padding: 40px; margin: 40px 0;">
+                <h3 style="font-size: 42px; color: #00ff88; text-align: center; margin-bottom: 30px;">
+                    Build Something That Matters
+                </h3>
+                <p style="font-size: 24px; color: #c9d1d9; text-align: center; line-height: 1.8; margin-bottom: 30px;">
+                    You have <span class="highlight">4 hours</span> to create a solution that could save universities 
+                    <span class="info">hundreds of hours</span> and help <span class="info">thousands of students</span> 
+                    learn more effectively.
+                </p>
+                <p style="font-size: 24px; color: #c9d1d9; text-align: center; line-height: 1.8;">
+                    This isn't just about code—it's about solving a <span class="highlight">real problem</span> with 
+                    <span class="highlight">creativity</span>, <span class="highlight">innovation</span>, and 
+                    <span class="highlight">smart use of AI</span>.
+                </p>
+            </div>
+
+            <div class="stats-grid" style="margin: 40px 0;">
+                <div class="stat-box" style="border-left: 6px solid #00ff88;">
+                    <div class="stat-number" style="font-size: 48px; color: #00ff88;">⚡</div>
+                    <div class="stat-label" style="font-size: 18px;">Fast Processing</div>
+                </div>
+                <div class="stat-box" style="border-left: 6px solid #00d9ff;">
+                    <div class="stat-number" style="font-size: 48px; color: #00d9ff;">🎨</div>
+                    <div class="stat-label" style="font-size: 18px;">Beautiful Design</div>
+                </div>
+                <div class="stat-box" style="border-left: 6px solid #7f5af0;">
+                    <div class="stat-number" style="font-size: 48px; color: #7f5af0;">🤖</div>
+                    <div class="stat-label" style="font-size: 18px;">Smart AI Integration</div>
+                </div>
+                <div class="stat-box" style="border-left: 6px solid #ffa500;">
+                    <div class="stat-number" style="font-size: 48px; color: #ffa500;">💡</div>
+                    <div class="stat-label" style="font-size: 18px;">Creative Features</div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #7f5af0, #00ff88); padding: 40px; border-radius: 20px; box-shadow: 0 15px 50px rgba(127,90,240,0.6); text-align: center;">
+                <h3 style="font-size: 48px; color: #0d1117; font-weight: 900; margin-bottom: 15px;">
+                    Ready. Set. CODE! 🏆
+                </h3>
+                <p style="font-size: 28px; color: #0d1117; font-weight: 600;">
+                    Show us what you can build in 4 hours
+                </p>
+            </div>
+            
+            <div class="slide-number">7 / 7</div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button class="btn" onclick="previousSlide()">← Previous</button>
+        <button class="btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide--;
+            if (currentSlide < 1) currentSlide = 1;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (event.key === 'Home') {
+                currentSlide = 1;
+                showSlide(currentSlide);
+            } else if (event.key === 'End') {
+                currentSlide = totalSlides;
+                showSlide(currentSlide);
+            }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
