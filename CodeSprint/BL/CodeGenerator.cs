@@ -116,27 +116,27 @@ namespace BL
 
                                         Develop a C# backend service that performs the following:
 
-                                        Accepts a PDF file via an HTTP POST endpoint.
+                                        1. Accepts a PDF file via an HTTP POST endpoint.
 
-                                        Validates the file:
+                                        2. Validates the file:
+                                           - Must be a .pdf
+                                           - File size must not exceed a defined limit (e.g., 5MB)
 
-                                        Must be a .pdf
-                                        File size must not exceed a defined limit (e.g., 5MB)
+                                        3. Processes the PDF content to:
+                                           - Detect and extract multiple-choice questions.
+                                           - Extract the question text and associated answer choices.
+                                           - Identify the correct answer number if present.
 
-                                        Processes the PDF content to:
+                                        4. Returns the result as JSON, formatted exactly like this:
+                                           ?? Your output must be ONLY JSON — without any additional text or explanation outside the JSON.
 
-                                        Detect and extract multiple-choice questions.
-                                        Extract the question text and associated answer choices.
-                                        Identify the correct answer number if present.
+                                        Each question object must include:
+                                        - `"difficulty"`: An integer between 0–10.
+                                        - `"isCodingQuestion"`: true if the question text contains the word "code" (case-insensitive), otherwise false.
 
-                                        Returns the result as JSON, formatted exactly like this:
-                                        Your output must be ONLY JSON !!! Without any additional text or explanation
-                                        outside the JSON.
+                                        ?? If the PDF or any page contains only unrelated images (e.g., pictures of animals, objects, scenery, or memes) and does not contain valid multiple-choice questions, return an empty string (`""`) as the only output.
 
-                                        For each question:
-                                        - Add "difficulty" property (0–10)
-                                        - Add "isCodingQuestion": true if the question title contains the word "code" (case-insensitive), otherwise false.
-
+                                        ?? JSON Output Example:
                                         [
                                           {
                                             "text": "What is the capital of France?",
@@ -163,7 +163,8 @@ namespace BL
                                             "isCodingQuestion": false
                                           }
                                         ]
-                                    """;
+                                        """;
+
 
                 string finalPrompt = basePrompt;
 

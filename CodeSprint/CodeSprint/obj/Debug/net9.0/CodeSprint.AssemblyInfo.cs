@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CodeSprint")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c6c3d371c7ebaf0f5b88d6c46707bf87698ffbd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ca92814668b056215c9b2d65d28b83e6dd9dbfa3")]
 [assembly: System.Reflection.AssemblyProductAttribute("CodeSprint")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CodeSprint")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
