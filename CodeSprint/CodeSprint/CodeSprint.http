@@ -1,6 +1,82 @@
 @CodeSprint_HostAddress = https://localhost:7258
 
-GET {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
-Accept: application/json
+### Test 1: Upload single PDF file (English101.pdf)
+POST {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-###
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="English101.pdf"
+Content-Type: application/pdf
+
+< ./English101.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test 2: Upload single PDF with additional information
+POST {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="English101.pdf"
+Content-Type: application/pdf
+
+< ./English101.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="additionalInformation"
+
+Extract questions about grammar and vocabulary
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test 3: Upload multiple PDF files
+POST {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="English101.pdf"
+Content-Type: application/pdf
+
+< ./English101.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="Math201.pdf"
+Content-Type: application/pdf
+
+< ./Math201.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test 4: Upload with PNG file (allowed extension)
+POST {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="test.png"
+Content-Type: image/png
+
+< ./test.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test 5: Test with no file (should return 400 Bad Request)
+POST {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test 6: Test with invalid file type (should return error)
+POST {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="test.exe"
+Content-Type: application/octet-stream
+
+< ./test.exe
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Test 7: Test with empty PDF file (should return error)
+POST {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="files"; filename="empty.pdf"
+Content-Type: application/pdf
+
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
