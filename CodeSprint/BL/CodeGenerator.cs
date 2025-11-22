@@ -21,55 +21,57 @@ namespace BL
 
 
             string prompt = """
-                You are an AI assistant that helps build the business logic and API layer for an AI-powered Test Bank Generator system. This system processes educational PDFs and extracts multiple-choice questions.
+                            You are an AI assistant that helps build the business logic and API layer for an AI-powered Test Bank Generator system. This system processes educational PDFs and extracts multiple-choice questions.
 
-                🧩 Your Task:
+                            🧩 Your Task:
 
-                Develop a C# backend service that performs the following:
+                            Develop a C# backend service that performs the following:
 
-                Accepts a PDF file via an HTTP POST endpoint.
+                            Accepts a PDF file via an HTTP POST endpoint.
 
-                Validates the file:
+                            Validates the file:
 
-                Must be a .pdf
+                            Must be a .pdf
 
-                File size must not exceed a defined limit (e.g., 5MB)
+                            File size must not exceed a defined limit (e.g., 5MB)
 
-                Processes the PDF content to:
+                            Processes the PDF content to:
 
-                Detect and extract multiple-choice questions.
+                            Detect and extract multiple-choice questions.
 
-                Extract the question text and associated answer choices.
+                            Extract the question text and associated answer choices.
 
-                Identify the correct answer number if present.
+                            Identify the correct answer number if present.
 
-                Returns the result as JSON, formatted exactly like this:
-                Your output must be ONLY JSON !!! Without any additional text or explanation
-                outside the JSON.
+                            Returns the result as JSON, formatted exactly like this:
+                            Your output must be ONLY JSON !!! Without any additional text or explanation
+                            outside the JSON.
 
-                [
-                  {
-                    "text": "What is the capital of France?",
-                    "choices": {
-                      "choice1": "Berlin",
-                      "choice2": "Madrid",
-                      "choice3": "Paris",
-                      "choice4": "Rome"
-                    },
-                    "answerNumber": 3
-                  },
-                  {
-                    "text": "Which planet is known as the Red Planet?",
-                    "choices": {
-                      "choice1": "Earth",
-                      "choice2": "Mars",
-                      "choice3": "Venus",
-                      "choice4": "Jupiter"
-                    },
-                    "answerNumber": 2
-                  }
-                ]
-            """;
+                            [
+                              {
+                                "text": "What is the capital of France?",
+                                "choices": {
+                                  "choice1": "Berlin",
+                                  "choice2": "Madrid",
+                                  "choice3": "Paris",
+                                  "choice4": "Rome"
+                                },
+                                "answerNumber": 3,
+                                "difficulty": 0
+                              },
+                              {
+                                "text": "Which planet is known as the Red Planet?",
+                                "choices": {
+                                  "choice1": "Earth",
+                                  "choice2": "Mars",
+                                  "choice3": "Venus",
+                                  "choice4": "Jupiter"
+                                },
+                                "answerNumber": 2,
+                                "difficulty": 0
+                              }
+                            ]
+                        """;
 
             if (File.Exists(pdfFilePath))
             {
