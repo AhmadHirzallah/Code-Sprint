@@ -6,72 +6,70 @@ namespace BL
 {
     public class CodeGenerator
     {
-        public async Task GenerateCode()
+        public async Task GenerateOneQ(string pdfFilePath = @"E:\Dash Board\Resources\WORK & Practice\Code-Sprint\English101.pdf")
         {
-            string pdfFilePath = @"E:\Dash Board\Resources\WORK & Practice\Code-Sprint\English101.pdf";
             string base64data = "";
             var googleAI = new GoogleAI(apiKey: "AIzaSyBCM3o9aMqzE1bCPSKwi-JmhKHlYNffeLs");
-
 
 
             var model = googleAI.GenerativeModel(model: Model.Gemma3);
 
 
-
-
-
             string prompt = """
-                            You are an AI assistant that helps build the business logic and API layer for an AI-powered Test Bank Generator system. This system processes educational PDFs and extracts multiple-choice questions.
+                                    You are an AI assistant that helps build the business logic and API layer for an AI-powered Test Bank Generator system. This system processes educational PDFs and extracts multiple-choice questions.
 
-                            🧩 Your Task:
+                                    🧩 Your Task:
 
-                            Develop a C# backend service that performs the following:
+                                    Develop a C# backend service that performs the following:
 
-                            Accepts a PDF file via an HTTP POST endpoint.
+                                    Accepts a PDF file via an HTTP POST endpoint.
 
-                            Validates the file:
+                                    Validates the file:
 
-                            Must be a .pdf
+                                    Must be a .pdf
+                                    File size must not exceed a defined limit (e.g., 5MB)
 
-                            File size must not exceed a defined limit (e.g., 5MB)
+                                    Processes the PDF content to:
 
-                            Processes the PDF content to:
+                                    Detect and extract multiple-choice questions.
+                                    Extract the question text and associated answer choices.
+                                    Identify the correct answer number if present.
 
-                            Detect and extract multiple-choice questions.
+                                    Returns the result as JSON, formatted exactly like this:
+                                    Your output must be ONLY JSON !!! Without any additional text or explanation
+                                    outside the JSON.
 
-                            Extract the question text and associated answer choices.
+                                    For each question:
+                                    - Add "difficulty" property (0–10)
+                                    - Add "isCodingQuestion": true if the question title contains the word "code" (case-insensitive), otherwise false.
 
-                            Identify the correct answer number if present.
-
-                            Returns the result as JSON, formatted exactly like this:
-                            Your output must be ONLY JSON !!! Without any additional text or explanation
-                            outside the JSON.
-
-                            [
-                              {
-                                "text": "What is the capital of France?",
-                                "choices": {
-                                  "choice1": "Berlin",
-                                  "choice2": "Madrid",
-                                  "choice3": "Paris",
-                                  "choice4": "Rome"
-                                },
-                                "answerNumber": 3,
-                                "difficulty": 0
-                              },
-                              {
-                                "text": "Which planet is known as the Red Planet?",
-                                "choices": {
-                                  "choice1": "Earth",
-                                  "choice2": "Mars",
-                                  "choice3": "Venus",
-                                  "choice4": "Jupiter"
-                                },
-                                "answerNumber": 2,
-                                "difficulty": 0
-                              }
-                            ]
-                        """;
+                                    [
+                                      {
+                                        "text": "What is the capital of France?",
+                                        "choices": {
+                                          "choice1": "Berlin",
+                                          "choice2": "Madrid",
+                                          "choice3": "Paris",
+                                          "choice4": "Rome"
+                                        },
+                                        "answerNumber": 3,
+                                        "difficulty": 0,
+                                        "isCodingQuestion": false
+                                      },
+                                      {
+                                        "text": "Which planet is known as the Red Planet?",
+                                        "choices": {
+                                          "choice1": "Earth",
+                                          "choice2": "Mars",
+                                          "choice3": "Venus",
+                                          "choice4": "Jupiter"
+                                        },
+                                        "answerNumber": 2,
+                                        "difficulty": 0,
+                                        "isCodingQuestion": false
+                                      }
+                                    ]
+                                """;
 
             if (File.Exists(pdfFilePath))
             {
