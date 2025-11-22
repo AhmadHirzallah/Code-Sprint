@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "VTqSxkrqQfk=",
+  "success": true,
+  "projectFilePath": "E:\\Dash Board\\Resources\\WORK & Practice\\Code-Sprint\\CodeSprint\\CodeSprint\\CodeSprint.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Ahmad\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.10\\microsoft.aspnetcore.openapi.9.0.10.nupkg.sha512",
+    "C:\\Users\\Ahmad\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
