@@ -1,6 +1,6 @@
-@CodeSprint_HostAddress = http://localhost:5217
+@CodeSprint_HostAddress = https://localhost:7258
 
-GET {{CodeSprint_HostAddress}}/weatherforecast/
+GET {{CodeSprint_HostAddress}}/api/Generation/ProcessFiles
 Accept: application/json
 
 ###

@@ -3,7 +3,7 @@ using BL;
 
 namespace CodeSprint.Controllers
 {
-    [Route("api/Generation")]
+    [Route("api/Generation")] // api/Generation/ProcessFiles
     [ApiController]
     public class GenerationController : ControllerBase
     {
@@ -29,8 +29,8 @@ namespace CodeSprint.Controllers
         /// <returns>JSON array of extracted questions from all files combined</returns>
         [HttpPost("ProcessFiles")]
         public async Task<IActionResult> ProcessFiles(
-            List<IFormFile> files,
-            string? additionalInformation = "")
+            [FromForm] List<IFormFile> files,
+            [FromForm] string? additionalInformation = "")
         {
             try
             {
